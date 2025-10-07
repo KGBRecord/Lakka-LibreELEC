@@ -1,0 +1,55 @@
+# Ignore build directories and output files
+build.*/
+*.img
+*.img.gz
+*.tar
+*.tar.xz
+*.tar.gz
+*.tar.bz2
+*.iso
+*.zip
+*.ova
+
+# Ignore source code cache
+.ccache/
+sources/
+target/
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore Docker files (except the one being used)
+Dockerfile.*
+!Dockerfile
+docker-compose.override.yml
+
+# Ignore temporary files
+tmp/
+temp/
+.tmp/
+
+# Ignore OS specific files
+Thumbs.db
+desktop.ini
+
+# Ignore backup files
+*.bak
+*.backup
+*.orig
+
+# Ignore package manager files that might be present
+node_modules/
+*.npm
+*.yarn
+__pycache__/
+*.pyc
+*.pyo

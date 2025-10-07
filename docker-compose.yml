@@ -1,0 +1,128 @@
+version: '3.8'
+
+services:
+  lakka-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lakka-libreelec:latest
+    container_name: lakka-build-env
+    volumes:
+      # Mount source code - COMMENTED OUT to avoid case-sensitive issues on macOS
+      # - .:/lakka-libreelec:rw
+      # Persist build directories for each target/platform
+      - lakka-build-generic-x86_64:/lakka-libreelec/build.Lakka-Generic.x86_64
+      - lakka-build-generic-i386:/lakka-libreelec/build.Lakka-Generic.i386
+      - lakka-build-generic-wayland:/lakka-libreelec/build.Lakka-wayland.x86_64
+      - lakka-build-generic-x11:/lakka-libreelec/build.Lakka-x11.x86_64
+      - lakka-build-rpi4:/lakka-libreelec/build.Lakka-RPi4.aarch64
+      - lakka-build-rpi5:/lakka-libreelec/build.Lakka-RPi5.aarch64
+      - lakka-build-switch:/lakka-libreelec/build.Lakka-Switch.aarch64
+      - lakka-build-amlgx:/lakka-libreelec/build.Lakka-AMLGX.aarch64
+      - lakka-build-h3:/lakka-libreelec/build.Lakka-H3.arm
+      - lakka-build-h5:/lakka-libreelec/build.Lakka-H5.aarch64
+      - lakka-build-h6:/lakka-libreelec/build.Lakka-H6.aarch64
+      - lakka-build-h616:/lakka-libreelec/build.Lakka-H616.aarch64
+      - lakka-build-h2plus:/lakka-libreelec/build.Lakka-H2-plus.arm
+      - lakka-build-r40:/lakka-libreelec/build.Lakka-R40.arm
+      - lakka-build-a64:/lakka-libreelec/build.Lakka-A64.aarch64
+      - lakka-build-imx6:/lakka-libreelec/build.Lakka-iMX6.arm
+      - lakka-build-imx8:/lakka-libreelec/build.Lakka-iMX8.aarch64
+      - lakka-build-rpi:/lakka-libreelec/build.Lakka-RPi.arm
+      - lakka-build-rpi2:/lakka-libreelec/build.Lakka-RPi2.arm
+      - lakka-build-rpi3:/lakka-libreelec/build.Lakka-RPi3.aarch64
+      - lakka-build-rpizero-gpicase:/lakka-libreelec/build.Lakka-RPiZero-GPiCase.arm
+      - lakka-build-rpizero2-gpicase:/lakka-libreelec/build.Lakka-RPiZero2-GPiCase.arm
+      - lakka-build-rpizero2-gpicase2w:/lakka-libreelec/build.Lakka-RPiZero2-GPiCase2W.aarch64
+      - lakka-build-rpi4-gpicase2:/lakka-libreelec/build.Lakka-RPi4-GPiCase2.aarch64
+      - lakka-build-rpi4-piboydmg:/lakka-libreelec/build.Lakka-RPi4-PiBoyDmg.aarch64
+      - lakka-build-rpi4-retrodreamer:/lakka-libreelec/build.Lakka-RPi4-RetroDreamer.aarch64
+      - lakka-build-rk3288:/lakka-libreelec/build.Lakka-RK3288.arm
+      - lakka-build-rk3328:/lakka-libreelec/build.Lakka-RK3328.aarch64
+      - lakka-build-rk3399:/lakka-libreelec/build.Lakka-RK3399.aarch64
+      - lakka-build-exynos:/lakka-libreelec/build.Lakka-Exynos.arm
+      - lakka-build-odin:/lakka-libreelec/build.Lakka-Odin.aarch64
+      # Shared resources
+      - lakka-sources:/lakka-libreelec/sources  
+      - lakka-toolchain:/lakka-libreelec/toolchain
+      - lakka-ccache:/lakka-libreelec/.ccache
+      - lakka-target:/lakka-libreelec/target
+      # Docker socket for Docker-in-Docker if needed
+      # - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Build environment variables
+      - DISTRO=Lakka
+      - PROJECT=Generic
+      - ARCH=x86_64
+      - MAKEFLAGS=-j$(nproc)
+      - CCACHE_DIR=/lakka-libreelec/.ccache
+      # Set timezone
+      - TZ=UTC
+    working_dir: /lakka-libreelec
+    # Keep container running
+    tty: true
+    stdin_open: true
+    # Use host networking for better performance
+    network_mode: host
+    # Give container more privileges for build processes
+    privileged: true
+    # Add security options for better permission handling
+    security_opt:
+      - seccomp:unconfined
+    # Increase shared memory size
+    shm_size: 2gb
+    # Set resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 16G
+        reservations:
+          memory: 4G
+
+volumes:
+  # Generic builds
+  lakka-build-generic-x86_64:
+  lakka-build-generic-i386:
+  lakka-build-generic-wayland:
+  lakka-build-generic-x11:
+  # Raspberry Pi builds
+  lakka-build-rpi:
+  lakka-build-rpi2:
+  lakka-build-rpi3:
+  lakka-build-rpi4:
+  lakka-build-rpi5:
+  lakka-build-rpizero-gpicase:
+  lakka-build-rpizero2-gpicase:
+  lakka-build-rpizero2-gpicase2w:
+  lakka-build-rpi4-gpicase2:
+  lakka-build-rpi4-piboydmg:
+  lakka-build-rpi4-retrodreamer:
+  # Allwinner builds
+  lakka-build-a64:
+  lakka-build-h2plus:
+  lakka-build-h3:
+  lakka-build-h5:
+  lakka-build-h6:
+  lakka-build-h616:
+  lakka-build-r40:
+  # Amlogic builds
+  lakka-build-amlgx:
+  # Nintendo Switch
+  lakka-build-switch:
+  # NXP builds
+  lakka-build-imx6:
+  lakka-build-imx8:
+  # Rockchip builds
+  lakka-build-rk3288:
+  lakka-build-rk3328:
+  lakka-build-rk3399:
+  # Samsung builds
+  lakka-build-exynos:
+  # Ayn builds
+  lakka-build-odin:
+  # Shared resources
+  lakka-sources:
+  lakka-toolchain:
+  lakka-ccache:
+  lakka-target:
+# No persistent volumes - build everything in container
