@@ -43,7 +43,7 @@ Java environment is automatically configured with:
 
 ### Current Goals:
 - ✅ **Java Support**: Adding Eclipse Temurin OpenJDK 8u422-b05
-- 🔄 **FreEJ2ME-Plus Integration**: Working on built-in FreEJ2ME-Plus emulator
+- 🔄 **FreeJ2ME-Plus Integration**: Working on built-in FreeJ2ME-Plus emulator
 - 🔍 **Build System Optimization**: Resolving compilation and dependency issues
 
 ### Known Issues:
